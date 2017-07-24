@@ -119,7 +119,7 @@ for i in xrange(0, tourney_count):
     tourney_singles_winner_name = tourney_singles_winner_name_cleaned[i]
     tourney_singles_winner_slug = tourney_singles_winner_url_parsed[i].split("/")[3]
     tourney_singles_winner_player_id = tourney_singles_winner_url_parsed[i].split("/")[4]
-    
+
     tourney_doubles_winner1_name = tourney_doubles_winner1_name_cleaned[i]
     tourney_doubles_winner2_name = tourney_doubles_winner2_name_cleaned[i]
     tourney_doubles_winner1_slug = tourney_doubles_winner1_url_parsed[i].split("/")[3]
@@ -139,10 +139,10 @@ for i in xrange(0, tourney_count):
     # Iterate over each tournament round
     for j in xrange(0, tourney_round_count):
         tourney_round_name = tourney_round_name_parsed[j]
-        
+
         tourney_match_count_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr/td[contains(@class, 'day-table-score')]/a"
         tourney_match_count_parsed = html_parse(tourney_url, tourney_match_count_xpath)
-        
+
         tourney_match_count = len(tourney_match_count_parsed)
 
         # Iterate over each match
@@ -164,7 +164,7 @@ for i in xrange(0, tourney_count):
             loser_player_url = loser_player_url_parsed[0]
 
             loser_slug = loser_player_url.split("/")[3]
-            loser_player_id = loser_player_url.split("/")[4]            
+            loser_player_id = loser_player_url.split("/")[4]
 
             loser_name_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr[" + str(k+1) + "]/td[contains(@class, 'day-table-name')][2]/a/text()"
             loser_name_parsed = html_parse(tourney_url, loser_name_xpath)
@@ -176,7 +176,7 @@ for i in xrange(0, tourney_count):
 
             match_score_text_xpath = tourney_match_count_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr[" + str(k+1) + "]/td[contains(@class, 'day-table-score')]/a/text()"
             match_score_text_parsed = html_parse(tourney_url, match_score_text_xpath)
-            
+
             match_score_tiebreak_xpath = tourney_match_count_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr[" + str(k+1) + "]/td[contains(@class, 'day-table-score')]/a/sup/text()"
             match_score_tiebreak_parsed = html_parse(tourney_url, match_score_tiebreak_xpath)
 
@@ -184,17 +184,17 @@ for i in xrange(0, tourney_count):
             if len(match_score_tiebreak_parsed) == 0:
                 # Match score
                 match_score = match_score_node_parsed[0].strip()
-                
+
                 # Count games won/lost
                 match_score_split = match_score.split(" ")
                 games_won = 0
                 games_lost = 0
-                for k in xrange(0, len(match_score_split)):                    
+                for k in xrange(0, len(match_score_split)):
                     # Regex match to test for numbers, to skip cases like '(RET)'
                     test = re.match(r'\d*', match_score_split[k])
                     if len(test.group(0)) > 0:
                         games_won += int(match_score_split[k][0])
-                        games_lost += int(match_score_split[k][1])                        
+                        games_lost += int(match_score_split[k][1])
                 games_total = games_won + games_lost
 
                 # Count tiebreaks
@@ -219,7 +219,7 @@ for i in xrange(0, tourney_count):
 
             # Condition if match score has tiebreaks
             else:
-                # Match score       
+                # Match score
                 match_score = ""
                 tiebreak_set_split_count = len(match_score_text_parsed)
                 for k in xrange(0, tiebreak_set_split_count):
@@ -234,7 +234,7 @@ for i in xrange(0, tourney_count):
                 # Count games won/lost
                 match_score_no_tiebreak_text = ""
                 for k in xrange(0, len(match_score_text_parsed)):
-                    match_score_no_tiebreak_text += " " + match_score_text_parsed[k].strip()                    
+                    match_score_no_tiebreak_text += " " + match_score_text_parsed[k].strip()
                 match_score_no_tiebreak_text = match_score_no_tiebreak_text.strip()
                 match_score_no_tiebreak_array = match_score_no_tiebreak_text.split(" ")
                 games_won = 0
@@ -268,8 +268,8 @@ for i in xrange(0, tourney_count):
                         if int(match_score_no_tiebreak_array[k][0]) > int(match_score_no_tiebreak_array[k][1]):
                             sets_won += 1
                         else:
-                            sets_lost += 1                              
-            
+                            sets_lost += 1
+
             winner_games_won = games_won
             winner_games_lost = games_lost
             winner_sets_won = sets_won
@@ -282,7 +282,7 @@ for i in xrange(0, tourney_count):
             loser_sets_won = sets_lost
             loser_sets_lost = sets_won
             loser_tiebreaks_won = tiebreaks_lost
-            loser_tiebreaks_lost = tiebreaks_won       
+            loser_tiebreaks_lost = tiebreaks_won
 
             # Command line output for debugging
             print tourney_name + " | " + tourney_round_name + " | " + winner_name + " def. " + loser_name + " | " + match_score
