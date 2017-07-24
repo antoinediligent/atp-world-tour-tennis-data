@@ -21,6 +21,9 @@ import re
 import json
 import unicodecsv
 import sys
+from datetime import datetime
+from datetime import date
+import time
 
 def regex_strip_string(string):
     string = re.sub('\n', '', string)
@@ -115,6 +118,13 @@ for i in xrange(0, tourney_count):
     tourney_doubles_draw = tourney_doubles_draw_cleaned[i]
     tourney_conditions = tourney_conditions_cleaned[i].strip()
     tourney_surface = tourney_surface_cleaned[i]
+
+    date_tourney = datetime.strptime(tourney_dates, '%Y.%m.%d').date()
+    date_today = date.fromtimestamp(time.time())
+
+    if date_today <= date_tourney:
+        print "Tourney \"" + tourney_name + "\" isn't finished yet"
+        continue
 
     tourney_singles_winner_name = tourney_singles_winner_name_cleaned[i]
     tourney_singles_winner_slug = tourney_singles_winner_url_parsed[i].split("/")[3]
