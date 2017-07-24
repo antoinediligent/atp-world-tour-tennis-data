@@ -22,12 +22,6 @@ import json
 import unicodecsv
 import sys
 
-def html_parse(url, xpath):
-    page = requests.get(url)
-    tree = html.fromstring(page.content)
-    result = tree.xpath(xpath)
-    return result
-
 def regex_strip_string(string):
     string = re.sub('\n', '', string)
     string = re.sub('\r', '', string)
@@ -53,60 +47,63 @@ csv_array = []
 header = [['year', ' tourney_name', ' tourney_slug', ' tourney_id', ' tourney_location', ' tourney_dates', ' tourney_singles_draw', ' tourney_doubles_draw', ' tourney_conditions', ' tourney_surface', ' tourney_singles_winner_name', ' tourney_singles_winner_slug', ' tourney_singles_winner_player_id', ' tourney_doubles_winner1_name', ' tourney_doubles_winner1_slug', ' tourney_doubles_winner1_player_id', ' tourney_doubles_winner2_name', ' tourney_doubles_winner2_slug', ' tourney_doubles_winner2_player_id', ' tourney_round_name', ' winner_name', ' winner_slug', ' winner_player_id', ' loser_name', ' loser_slug', ' loser_player_id', ' match_score', ' games_total', ' sets_total', ' tiebreaks_total', ' winner_games_won', ' winner_games_lost', ' winner_sets_won', ' winner_sets_lost', ' winner_tiebreaks_won', ' winner_tiebreaks_lost', ' loser_games_won', ' loser_games_lost', ' loser_sets_won', ' loser_sets_lost', ' loser_tiebreaks_won', ' loser_tiebreaks_lost']]
 csv_array = header + csv_array
 
+year_page = requests.get(year_url)
+year_tree = html.fromstring(year_page.content)
+
 # XPaths
 tourney_title_xpath = "//span[contains(@class, 'tourney-title')]/text()"
-tourney_title_parsed = html_parse(year_url, tourney_title_xpath)
+tourney_title_parsed = year_tree.xpath(tourney_title_xpath)
 tourney_title_cleaned = regex_strip_array(tourney_title_parsed)
 
 tourney_count = len(tourney_title_cleaned)
 
 tourney_location_xpath = "//span[contains(@class, 'tourney-location')]/text()"
-tourney_location_parsed = html_parse(year_url, tourney_location_xpath)
+tourney_location_parsed = year_tree.xpath(tourney_location_xpath)
 tourney_location_cleaned = regex_strip_array(tourney_location_parsed)
 
 tourney_dates_xpath = "//span[contains(@class, 'tourney-dates')]/text()"
-tourney_dates_parsed = html_parse(year_url, tourney_dates_xpath)
+tourney_dates_parsed = year_tree.xpath(tourney_dates_xpath)
 tourney_dates_cleaned = regex_strip_array(tourney_dates_parsed)
 
 tourney_singles_draw_xpath = "//div[contains(., 'SGL')]/a[1]/span/text()"
-tourney_singles_draw_parsed = html_parse(year_url, tourney_singles_draw_xpath)
+tourney_singles_draw_parsed = year_tree.xpath(tourney_singles_draw_xpath)
 tourney_singles_draw_cleaned = regex_strip_array(tourney_singles_draw_parsed)
 
 tourney_doubles_draw_xpath = "//div[contains(., 'DBL')]/a[1]/span/text()"
-tourney_doubles_draw_parsed = html_parse(year_url, tourney_doubles_draw_xpath)
+tourney_doubles_draw_parsed = year_tree.xpath(tourney_doubles_draw_xpath)
 tourney_doubles_draw_cleaned = regex_strip_array(tourney_doubles_draw_parsed)
 
 tourney_conditions_xpath = "//div[contains(., 'Outdoor') or contains(., 'Indoor')]/text()[normalize-space()]"
-tourney_conditions_parsed = html_parse(year_url, tourney_conditions_xpath)
+tourney_conditions_parsed = year_tree.xpath(tourney_conditions_xpath)
 tourney_conditions_cleaned = regex_strip_array(tourney_conditions_parsed)
 
 tourney_surface_xpath = "//div[contains(., 'Outdoor') or contains(., 'Indoor')]/span/text()[normalize-space()]"
-tourney_surface_parsed = html_parse(year_url, tourney_surface_xpath)
+tourney_surface_parsed = year_tree.xpath(tourney_surface_xpath)
 tourney_surface_cleaned = regex_strip_array(tourney_surface_parsed)
 
 tourney_singles_winner_name_xpath = "//div[contains(@class, 'tourney-detail-winner') and contains(., 'SGL')]/a/text()"
-tourney_singles_winner_name_parsed = html_parse(year_url, tourney_singles_winner_name_xpath)
+tourney_singles_winner_name_parsed = year_tree.xpath(tourney_singles_winner_name_xpath)
 tourney_singles_winner_name_cleaned = regex_strip_array(tourney_singles_winner_name_parsed)
 
 tourney_singles_winner_url_xpath = "//div[contains(@class, 'tourney-detail-winner') and contains(., 'SGL')]/a/@href"
-tourney_singles_winner_url_parsed = html_parse(year_url, tourney_singles_winner_url_xpath)
+tourney_singles_winner_url_parsed = year_tree.xpath(tourney_singles_winner_url_xpath)
 
 tourney_doubles_winner1_name_xpath = "//div[contains(@class, 'tourney-detail-winner') and contains(., 'DBL')]/a[1]/text()"
-tourney_doubles_winner1_name_parsed = html_parse(year_url, tourney_doubles_winner1_name_xpath)
+tourney_doubles_winner1_name_parsed = year_tree.xpath(tourney_doubles_winner1_name_xpath)
 tourney_doubles_winner1_name_cleaned = regex_strip_array(tourney_doubles_winner1_name_parsed)
 
 tourney_doubles_winner2_name_xpath = "//div[contains(@class, 'tourney-detail-winner') and contains(., 'DBL')]/a[2]/text()"
-tourney_doubles_winner2_name_parsed = html_parse(year_url, tourney_doubles_winner2_name_xpath)
+tourney_doubles_winner2_name_parsed = year_tree.xpath(tourney_doubles_winner2_name_xpath)
 tourney_doubles_winner2_name_cleaned = regex_strip_array(tourney_doubles_winner2_name_parsed)
 
 tourney_doubles_winner1_url_xpath = "//div[contains(@class, 'tourney-detail-winner') and contains(., 'DBL')]/a[1]/@href"
-tourney_doubles_winner1_url_parsed = html_parse(year_url, tourney_doubles_winner1_url_xpath)
+tourney_doubles_winner1_url_parsed = year_tree.xpath(tourney_doubles_winner1_url_xpath)
 
 tourney_doubles_winner2_url_xpath = "//div[contains(@class, 'tourney-detail-winner') and contains(., 'DBL')]/a[2]/@href"
-tourney_doubles_winner2_url_parsed = html_parse(year_url, tourney_doubles_winner2_url_xpath)
+tourney_doubles_winner2_url_parsed = year_tree.xpath(tourney_doubles_winner2_url_xpath)
 
 tourney_details_url_xpath = "//td[contains(@class, 'tourney-details')]/a/@href"
-tourney_details_url_parsed = html_parse(year_url, tourney_details_url_xpath)
+tourney_details_url_parsed = year_tree.xpath(tourney_details_url_xpath)
 
 # Iterate over each tournament
 for i in xrange(0, tourney_count):
@@ -135,8 +132,11 @@ for i in xrange(0, tourney_count):
     tourney_id = tourney_details_url.split("/")[5]
     tourney_url = url_prefix + tourney_details_url
 
+    tourney_page = requests.get(tourney_url)
+    tourney_tree = html.fromstring(tourney_page.content)
+
     tourney_round_name_xpath = "//table[contains(@class, 'day-table')]/thead/tr/th/text()"
-    tourney_round_name_parsed = html_parse(tourney_url, tourney_round_name_xpath)
+    tourney_round_name_parsed = tourney_tree.xpath(tourney_round_name_xpath)
     tourney_round_count = len(tourney_round_name_parsed)
 
     # Iterate over each tournament round
@@ -144,7 +144,7 @@ for i in xrange(0, tourney_count):
         tourney_round_name = tourney_round_name_parsed[j]
 
         tourney_match_count_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr/td[contains(@class, 'day-table-score')]/a"
-        tourney_match_count_parsed = html_parse(tourney_url, tourney_match_count_xpath)
+        tourney_match_count_parsed = tourney_tree.xpath(tourney_match_count_xpath)
 
         tourney_match_count = len(tourney_match_count_parsed)
 
@@ -152,36 +152,36 @@ for i in xrange(0, tourney_count):
         for k in xrange(0, tourney_match_count):
 
             winner_player_url_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr[" + str(k+1) + "]/td[contains(@class, 'day-table-name')][1]/a/@href"
-            winner_player_url_parsed = html_parse(tourney_url, winner_player_url_xpath)
+            winner_player_url_parsed = tourney_tree.xpath(winner_player_url_xpath)
             winner_player_url = winner_player_url_parsed[0]
 
             winner_slug = winner_player_url.split("/")[3]
             winner_player_id = winner_player_url.split("/")[4]
 
             winner_name_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr[" + str(k+1) + "]/td[contains(@class, 'day-table-name')][1]/a/text()"
-            winner_name_parsed = html_parse(tourney_url, winner_name_xpath)
+            winner_name_parsed = tourney_tree.xpath(winner_name_xpath)
             winner_name = winner_name_parsed[0]
 
             loser_player_url_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr[" + str(k+1) + "]/td[contains(@class, 'day-table-name')][2]/a/@href"
-            loser_player_url_parsed = html_parse(tourney_url, loser_player_url_xpath)
+            loser_player_url_parsed = tourney_tree.xpath(loser_player_url_xpath)
             loser_player_url = loser_player_url_parsed[0]
 
             loser_slug = loser_player_url.split("/")[3]
             loser_player_id = loser_player_url.split("/")[4]
 
             loser_name_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr[" + str(k+1) + "]/td[contains(@class, 'day-table-name')][2]/a/text()"
-            loser_name_parsed = html_parse(tourney_url, loser_name_xpath)
+            loser_name_parsed = tourney_tree.xpath(loser_name_xpath)
             loser_name = loser_name_parsed[0]
 
             # Scraping the match score
             match_score_node_xpath = tourney_match_count_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr[" + str(k+1) + "]/td[contains(@class, 'day-table-score')]/a/node()"
-            match_score_node_parsed = html_parse(tourney_url, match_score_node_xpath)
+            match_score_node_parsed = tourney_tree.xpath(match_score_node_xpath)
 
             match_score_text_xpath = tourney_match_count_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr[" + str(k+1) + "]/td[contains(@class, 'day-table-score')]/a/text()"
-            match_score_text_parsed = html_parse(tourney_url, match_score_text_xpath)
+            match_score_text_parsed = tourney_tree.xpath(match_score_text_xpath)
 
             match_score_tiebreak_xpath = tourney_match_count_xpath = "//table[contains(@class, 'day-table')]/tbody[" + str(j+1) + "]/tr[" + str(k+1) + "]/td[contains(@class, 'day-table-score')]/a/sup/text()"
-            match_score_tiebreak_parsed = html_parse(tourney_url, match_score_tiebreak_xpath)
+            match_score_tiebreak_parsed = tourney_tree.xpath(match_score_tiebreak_xpath)
 
             # Condition if match has no tiebreaks
             if len(match_score_tiebreak_parsed) == 0:
