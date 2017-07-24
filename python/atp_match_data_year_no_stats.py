@@ -19,7 +19,7 @@ from lxml import html
 import requests
 import re
 import json
-import csv
+import unicodecsv
 import sys
 
 def html_parse(url, xpath):
@@ -38,6 +38,9 @@ def regex_strip_array(array):
     for i in xrange(0, len(array)):
         array[i] = regex_strip_string(array[i])
     return array
+
+def simplify_quotes(string):
+    return string.replace(u"\u2018", "'").replace(u"\u2019", "'")
 
 # Command line input
 year = str(sys.argv[1])
@@ -108,7 +111,7 @@ tourney_details_url_parsed = html_parse(year_url, tourney_details_url_xpath)
 # Iterate over each tournament
 for i in xrange(0, tourney_count):
 
-    tourney_name = tourney_title_cleaned[i]
+    tourney_name = simplify_quotes(tourney_title_cleaned[i])
     tourney_location = tourney_location_cleaned[i]
     tourney_dates = tourney_dates_cleaned[i]
     tourney_singles_draw = tourney_singles_draw_cleaned[i]
@@ -293,7 +296,7 @@ for i in xrange(0, tourney_count):
 
             # Output to CSV file
             csv_out = open(year + ".csv", 'wb')
-            mywriter = csv.writer(csv_out)
+            mywriter = unicodecsv.writer(csv_out)
             for row in csv_array:
                 mywriter.writerow(row)
             csv_out.close()
