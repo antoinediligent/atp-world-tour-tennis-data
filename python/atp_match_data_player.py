@@ -129,11 +129,11 @@ for h in xrange(start_year, end_year + 1):
         else:
             tourney_href = tourney_href_parsed[0]
             tourney_href_split = tourney_href.split("/")
-            tourney_name_slug = tourney_href_split[3]    
+            tourney_name_slug = tourney_href_split[3]
             tourney_id = tourney_href_split[4]
             tourney_name_xpath = "//div[contains(@class, 'activity-tournament-table')][" + str(i+1) + "]/table[1]/tbody/tr/td[2]/a/text()"
             tourney_name_parsed = html_parse(year_url, tourney_name_xpath)
-            tourney_name = tourney_name_parsed[0]        
+            tourney_name = tourney_name_parsed[0]
 
         tourney_location = tourney_location_cleaned[i]
         tourney_dates = tourney_dates_cleaned[i]
@@ -184,7 +184,7 @@ for h in xrange(start_year, end_year + 1):
             match_score_node_parsed = html_parse(year_url, match_score_node_xpath)
 
             match_score_text_xpath = "//table[contains(@class, 'mega-table')][" + str(i+1) + "]/tbody/tr[" + str(j+1) + "]/td[5]/a/text()"
-            match_score_text_parsed = html_parse(year_url, match_score_text_xpath)       
+            match_score_text_parsed = html_parse(year_url, match_score_text_xpath)
 
             match_score_tiebreak_xpath = "//table[contains(@class, 'mega-table')][" + str(i+1) + "]/tbody/tr[" + str(j+1) + "]/td[5]/a/sup/text()"
             match_score_tiebreak_parsed = html_parse(year_url, match_score_tiebreak_xpath)
@@ -207,12 +207,12 @@ for h in xrange(start_year, end_year + 1):
 
                     # Match score
                     match_score = match_score_node_parsed[0].strip()
-                    
+
                     # Count games won/lost
                     match_score_split = match_score.split(" ")
                     games_won = 0
                     games_lost = 0
-                    for k in xrange(0, len(match_score_split)):                    
+                    for k in xrange(0, len(match_score_split)):
                         # Regex match to test for numbers, to skip cases like '(RET)'
                         test = re.match(r'\d*', match_score_split[k])
                         # Condition when set score is two single digit numbers, e.g. 64
@@ -221,7 +221,7 @@ for h in xrange(start_year, end_year + 1):
                                 games_won += int(match_score_split[k][0])
                                 games_lost += int(match_score_split[k][1])
                             # Condition when set score has a dash, e.g. "8-10"
-                            else: 
+                            else:
                                 games_won += int(match_score_split[k].split("-")[0])
                                 games_lost += int(match_score_split[k].split("-")[1])
 
@@ -254,18 +254,19 @@ for h in xrange(start_year, end_year + 1):
                                     sets_won += 1
                                 else:
                                     sets_lost += 1
-                
+
                 # Condition if match score has tiebreaks
                 else:
-                    
-                    # Match score       
+
+                    # Match score
                     match_score = ""
                     tiebreak_set_split_count = len(match_score_text_parsed)
                     for k in xrange(0, tiebreak_set_split_count):
                         if k < tiebreak_set_split_count - 1:
                             match_score_text_parsed[k] = match_score_text_parsed[k].strip()
                             match_score += match_score_text_parsed[k]
-                            match_score += "(" + match_score_tiebreak_parsed[k] + ") "
+                            if len(match_score_tiebreak_parsed) > k:
+                                match_score += "(" + match_score_tiebreak_parsed[k] + ") "
                         if k == tiebreak_set_split_count - 1:
                             match_score_text_parsed[k] = match_score_text_parsed[k].strip()
                             match_score += match_score_text_parsed[k]
@@ -273,7 +274,7 @@ for h in xrange(start_year, end_year + 1):
                     # Count games won/lost
                     match_score_no_tiebreak_text = ""
                     for k in xrange(0, len(match_score_text_parsed)):
-                        match_score_no_tiebreak_text += " " + match_score_text_parsed[k].strip()                    
+                        match_score_no_tiebreak_text += " " + match_score_text_parsed[k].strip()
                     match_score_no_tiebreak_text = match_score_no_tiebreak_text.strip()
                     match_score_no_tiebreak_array = match_score_no_tiebreak_text.split(" ")
                     games_won = 0
@@ -385,7 +386,7 @@ for h in xrange(start_year, end_year + 1):
                     opponent_return_points_total = ""
                     opponent_total_points_won = ""
                     opponent_total_points_total = ""
-                    #opponent_total_points_won_percentage = ""                
+                    #opponent_total_points_won_percentage = ""
 
                 # Condition if the match stats URL is available
                 elif len(match_stats_url_parsed[0]) > 0:
@@ -394,14 +395,14 @@ for h in xrange(start_year, end_year + 1):
                     match_time_xpath = "//td[contains(@class, 'time')]/text()"
                     match_time_parsed = html_parse(match_stats_url, match_time_xpath)
                     match_time_cleaned = regex_strip_array(match_time_parsed)
-                    
+
                     # match_time = match_time_cleaned[0].split(": ")[1]
                     try:
                         match_time = match_time_cleaned[0].replace("Time: ", "")
-                        match_time_split = match_time.split(":")            
+                        match_time_split = match_time.split(":")
                         match_time_hours = int(match_time_split[0])
                         match_time_minutes = int(match_time_split[1])
-                        match_duration = 60*match_time_hours + match_time_minutes                                        
+                        match_duration = 60*match_time_hours + match_time_minutes
                     except Exception:
                         match_time = ""
                         match_duration = ""
@@ -458,7 +459,7 @@ for h in xrange(start_year, end_year + 1):
                     winner_return_points_total = json_data[0]["playerStats"]["TotalReturnPointsWonDivisor"]
 
                     winner_total_points_won = json_data[0]["playerStats"]["TotalPointsWonDividend"]
-                    winner_total_points_total = json_data[0]["playerStats"]["TotalPointsWonDivisor"]            
+                    winner_total_points_total = json_data[0]["playerStats"]["TotalPointsWonDivisor"]
                     #winner_total_points_won_percentage = json_data[0]["playerStats"]["TotalPointsWonPercentage"]
 
                     # Loser stats
@@ -506,7 +507,7 @@ for h in xrange(start_year, end_year + 1):
                     loser_return_points_total = json_data[0]["opponentStats"]["TotalReturnPointsWonDivisor"]
 
                     loser_total_points_won = json_data[0]["opponentStats"]["TotalPointsWonDividend"]
-                    loser_total_points_total = json_data[0]["opponentStats"]["TotalPointsWonDivisor"]           
+                    loser_total_points_total = json_data[0]["opponentStats"]["TotalPointsWonDivisor"]
                     #loser_total_points_won_percentage = json_data[0]["opponentStats"]["TotalPointsWonPercentage"]
 
                     if match_win_loss == "W":
@@ -659,7 +660,7 @@ for h in xrange(start_year, end_year + 1):
 
                 # Command line output for debugging
                 print str(tourney_year) + " | " + tourney_name + " | " + match_round + " | " + opponent_name
-                
+
                 # Store the data
                 data = [tourney_year, tourney_name, tourney_name_slug, tourney_id, tourney_location, tourney_dates, tourney_singles_draw, tourney_doubles_draw, tourney_conditions, tourney_surface, player_name, player_slug, player_id, player_event_points, player_ranking, match_round, opponent_name, opponent_name_slug, opponent_player_id, opponent_rank, match_win_loss, match_score, sets_won, sets_lost, sets_total, games_won, games_lost, games_total, tiebreaks_won, tiebreaks_lost, tiebreaks_total, match_time, match_duration, player_aces, player_double_faults, player_first_serves_in, player_first_serves_total, player_first_serve_points_won, player_first_serve_points_total, player_second_serve_points_won, player_second_serve_points_total, player_break_points_saved, player_break_points_serve_total, player_service_points_won, player_service_points_total, player_first_serve_return_won, player_first_serve_return_total, player_second_serve_return_won, player_second_serve_return_total, player_break_points_converted, player_break_points_return_total, player_service_games_played, player_return_games_played, player_return_points_won, player_return_points_total, player_total_points_won, player_total_points_total, opponent_aces, opponent_double_faults, opponent_first_serves_in, opponent_first_serves_total, opponent_first_serve_points_won, opponent_first_serve_points_total, opponent_second_serve_points_won, opponent_second_serve_points_total, opponent_break_points_saved, opponent_break_points_serve_total, opponent_service_points_won, opponent_service_points_total, opponent_first_serve_return_won, opponent_first_serve_return_total, opponent_second_serve_return_won, opponent_second_serve_return_total, opponent_break_points_converted, opponent_break_points_return_total, opponent_service_games_played, opponent_return_games_played, opponent_return_points_won, opponent_return_points_total, opponent_total_points_won, opponent_total_points_total]
                 csv_array.append(data)
