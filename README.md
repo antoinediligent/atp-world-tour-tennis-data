@@ -171,10 +171,10 @@ opponent_total_points_total
 ### B1. The `atp_match_data_year_no_stats.py` script [^](#contents)
 The following Python script:
 
-* <a href="https://github.com/serve-and-volley/atp-world-tour-tennis-data/blob/master/python/atp_match_data_year_no_stats.py" target="_blank">atp_match_data_year_no_stats.py</a>
+* [python/atp_match_data_year_no_stats.py](atp_match_data_year_no_stats.py)
 
 collects all of the tournament and match data in a given year from the ATP World Tour website (but not the individual match stats, because of runtime issues, that's for a different script), and exports the following example CSV file:
 
-* <a href="https://github.com/serve-and-volley/atp-world-tour-tennis-data/blob/master/csv/year/2016_0-66.csv" target="_blank">2016_0-66.csv<a/> (1.21 MB)
+* [csv/year/2016_0-66.csv](2016_0-66.csv)(1.21 MB)
 
-* <a href="https://github.com/serve-and-volley/atp-world-tour-tennis-data/blob/master/csv/year/2017_0-51.csv" target="_blank">2017_0-51.csv<a/> (1.26 MB)
+* [csv/year/2017_0-51.csv](2017_0-51.csv)(1.26 MB)
